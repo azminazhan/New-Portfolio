@@ -24,7 +24,7 @@ const Journey = () => {
     const containerRef = useRef(null);
 
     return (
-        <section id="journey" className="relative py-12 md:py-24 overflow-hidden" ref={containerRef}>
+        <section id="journey" className="relative py-12 md:py-24" ref={containerRef}>
             <div className="container mx-auto px-6">
                 <motion.h3
                     initial={{ opacity: 0, y: 20 }}
@@ -63,7 +63,7 @@ const Journey = () => {
                                         whileInView={{ opacity: 1, y: 0 }}
                                         viewport={{ once: true, margin: "-100px" }}
                                         transition={{ duration: 0.5, delay: 0.1 }}
-                                        className={`w-full md:w-5/12 relative ${isEven ? 'md:pl-10' : 'md:pr-10'}`}
+                                        className={`w-full md:w-5/12 relative ${isEven ? 'md:pl-10' : 'md:pr-10'} z-10 hover:z-50`}
                                     >
 
                                         {/* Straight Connection Line */}

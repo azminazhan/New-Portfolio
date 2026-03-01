@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Github, ExternalLink, X, ChevronRight, ChevronLeft } from 'lucide-react';
 
 const Projects = () => {
     const [selectedProject, setSelectedProject] = useState(null);
+    const [enlargedImage, setEnlargedImage] = useState(null);
+    const galleryRef = useRef(null);
+
+    const scrollGallery = (direction) => {
+        if (galleryRef.current) {
+            const scrollAmount = galleryRef.current.clientWidth;
+            galleryRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+        }
+    };
 
     const projects = [
         {
@@ -20,26 +29,33 @@ const Projects = () => {
             tech: ['Firebase', 'JavaScript', 'Antigravity', 'Base44'],
             color: 'from-green-400 to-teal-500',
             images: [
-                "https://placehold.co/800x450/0f172a/00ff9d?text=Dashboard+View",
-                "https://placehold.co/800x450/0f172a/00ff9d?text=Admin+Panel",
-                "https://placehold.co/800x450/0f172a/00ff9d?text=Search+Feature"
-            ]
+                `${import.meta.env.BASE_URL}signin1.png`,
+                `${import.meta.env.BASE_URL}home.png`,
+                `${import.meta.env.BASE_URL}articles.png`,
+                `${import.meta.env.BASE_URL}iso.png`,
+                `${import.meta.env.BASE_URL}admin.png`
+            ],
+            liveDemo: "https://entomo-7c549.web.app/"
         },
         {
             id: 2,
             title: 'Deepfake Detection System',
             category: 'Deep Learning',
             description: [
-                "Developed a GAN architecture to synthesize original abstract art from noise vectors.",
-                "Implemented stylistic controls allowing users to tweak color palettes and complexity.",
-                "Optimized model inference time for real-time generation in the browser."
+                "Standalone deepfake detection system with a Streamlit frontend and hybrid CNN–RNN backend for video forgery detection.",
+                "Trained the model on real and manipulated datasets to identify facial inconsistencies and temporal artifacts.",
+                "Utilized Convolutional Neural Networks (CNN) for spatial feature extraction and Recurrent Neural Networks (RNN) for temporal sequence analysis.",
+                "Experimented and analysed based on different factors, optmizer, learning rate, sequence length, dropout rate and total epoch to get the best performance."
             ],
             details: "Using a hybrid model ResNet-50 with LSTM, the system detects deepfake videos by detecting generated artifacts on the face.",
-            tech: ['Python', 'PyTorch', 'TensorFlow', 'Streamlit'],
+            tech: ['Python', 'Streamlit', 'TensorFlow', 'PyTorch', 'Machine Learning'],
+            liveDemo: 'https://deepfake-detection-system-hv7yzpci4fubzj9vvktvlu.streamlit.app/',
             color: 'from-blue-500 to-cyan-500',
             images: [
-                "https://placehold.co/800x450/1e293b/38bdf8?text=Generated+Art+1",
-                "https://placehold.co/800x450/1e293b/38bdf8?text=Model+Architecture"
+                `${import.meta.env.BASE_URL}deep_home.png`,
+                `${import.meta.env.BASE_URL}deep_process.png`,
+                `${import.meta.env.BASE_URL}deep_result.png`,
+                `${import.meta.env.BASE_URL}deep_explain.png`
             ]
         },
         {
@@ -55,8 +71,8 @@ const Projects = () => {
             tech: ['Oracle Database', 'PL/SQL', 'SQL', 'ERD'],
             color: 'from-purple-500 to-pink-500',
             images: [
-                "https://placehold.co/800x450/2e1065/d8b4fe?text=Chat+Interface",
-                "https://placehold.co/800x450/2e1065/d8b4fe?text=Conversation+Flow"
+                "https://placehold.co/800x450/2e1065/d8b4fe?text=No+Preview",
+                "https://placehold.co/800x450/2e1065/d8b4fe?text=No+Preview"
             ]
         },
         {
@@ -72,8 +88,9 @@ const Projects = () => {
             tech: ['Power BI', 'Data Analysis'],
             color: 'from-orange-500 to-red-500',
             images: [
-                "https://placehold.co/800x450/431407/fb923c?text=Simulation+Env",
-                "https://placehold.co/800x450/431407/fb923c?text=Training+Graphs"
+                `${import.meta.env.BASE_URL}ckd1.png`,
+                `${import.meta.env.BASE_URL}ckd2.png`,
+                `${import.meta.env.BASE_URL}ckd3.png`
             ]
         }
     ];
@@ -161,63 +178,99 @@ const Projects = () => {
                             <div className="overflow-y-auto flex-1 custom-scrollbar">
                                 {/* Image Gallery Section */}
                                 <div className="relative w-full h-64 md:h-96 bg-black/50 group">
-                                    <div className="flex overflow-x-auto snap-x snap-mandatory h-full w-full custom-scrollbar">
+                                    <div ref={galleryRef} className="flex overflow-x-auto snap-x snap-mandatory h-full w-full custom-scrollbar scroll-smooth">
                                         {selectedProject.images.map((img, idx) => (
-                                            <div key={idx} className="flex-shrink-0 w-full h-full snap-center relative">
+                                            <div key={idx} className="flex-shrink-0 w-full h-full snap-center relative group/image overflow-hidden cursor-zoom-in" onClick={() => setEnlargedImage(img)}>
                                                 <img
                                                     src={img}
                                                     alt={`${selectedProject.title} screenshot ${idx + 1}`}
-                                                    className="w-full h-full object-cover"
+                                                    className="w-full h-full object-cover transition-all duration-300 group-hover/image:scale-105 group-hover/image:blur-sm"
                                                 />
-                                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 px-3 py-1 rounded-full text-xs text-white backdrop-blur-md">
+                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                                    <span className="bg-black/70 text-white font-bold !py-5 !px-5 rounded-full backdrop-blur-md border border-white/20 shadow-2xl tracking-wide">
+                                                        Click to Enlarge
+                                                    </span>
+                                                </div>
+                                                <div className="absolute bottom-4 left-4 bg-black/60 !px-3 !py-2 rounded-full text-xs font-bold text-white backdrop-blur-md border border-white/10 shadow-lg pointer-events-none">
                                                     Image {idx + 1} / {selectedProject.images.length}
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent pointer-events-none flex justify-between items-end">
-                                        <span className="text-white/60 text-xs uppercase tracking-widest"> &larr; Swipe for images &rarr; </span>
-                                    </div>
+
+                                    {/* Navigation Arrows */}
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); scrollGallery('left'); }}
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-[#00ff9d] text-white hover:text-black p-3 rounded-full backdrop-blur-md border border-white/20 transition-all opacity-0 group-hover:opacity-100 shadow-xl"
+                                    >
+                                        <ChevronLeft size={24} />
+                                    </button>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); scrollGallery('right'); }}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-[#00ff9d] text-white hover:text-black p-3 rounded-full backdrop-blur-md border border-white/20 transition-all opacity-0 group-hover:opacity-100 shadow-xl"
+                                    >
+                                        <ChevronRight size={24} />
+                                    </button>
                                 </div>
 
-                                <div className="p-8">
-                                    <div className="flex flex-col md:flex-row gap-6 justify-between items-start mb-6">
+                                <div className="!px-32 md:!px-6 py-12">
+                                    <div className="flex flex-col md:flex-row gap-8 justify-between items-start mb-10">
                                         <div>
-                                            <span className="text-[#00ff9d] font-mono text-sm mb-2 block">{selectedProject.category}</span>
-                                            <motion.h3 layoutId={`title-${selectedProject.id}`} className="text-3xl md:text-4xl font-bold text-white mb-2">{selectedProject.title}</motion.h3>
+                                            <span className="text-[#00ff9d] font-mono text-sm mb-4 block tracking-wider uppercase font-semibold">{selectedProject.category}</span>
+                                            <motion.h3 layoutId={`title-${selectedProject.id}`} className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">{selectedProject.title}</motion.h3>
                                         </div>
-                                        <div className="flex gap-3">
-                                            <a href="#" className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-[#00ff9d]/20 text-white hover:text-[#00ff9d] transition-colors font-semibold text-sm">
-                                                <Github size={18} /> Source
+                                        <div className="flex gap-4 mt-2 md:mt-0">
+                                            <a href="#" className="flex items-center !gap-2 !px-4 !py-2 rounded-full bg-white/10 hover:bg-[#00ff9d]/20 text-white hover:text-[#00ff9d] transition-colors font-semibold text-base leading-none">
+                                                <Github size={20} /> Source
                                             </a>
-                                            <a href="#" className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#00ff9d] text-black hover:bg-[#00ff9d]/80 transition-colors font-bold text-sm">
-                                                <ExternalLink size={18} /> Live Demo
-                                            </a>
+                                            {selectedProject.liveDemo ? (
+                                                <a href={selectedProject.liveDemo} target="_blank" rel="noopener noreferrer" className="flex items-center !gap-2 !px-4 !py-3 rounded-full bg-[#00ff9d] !text-black hover:bg-[#00ff9d]/80 transition-colors font-bold text-base leading-none">
+                                                    <ExternalLink size={20} /> Live Demo
+                                                </a>
+                                            ) : (
+                                                <a href="#" className="flex items-center !gap-2 !px-4 !py-3 rounded-full bg-[#00ff9d] !text-black hover:bg-[#00ff9d]/80 transition-colors font-bold text-base leading-none">
+                                                    <ExternalLink size={20} /> Live Demo
+                                                </a>
+                                            )}
                                         </div>
                                     </div>
 
                                     {/* Tech Stack */}
-                                    <div className="flex flex-wrap gap-2 mb-8">
+                                    <div className="flex flex-wrap gap-3 mb-12">
                                         {selectedProject.tech.map((t) => (
-                                            <span key={t} className="px-3 py-1 rounded-md bg-[#00ff9d]/10 border border-[#00ff9d]/20 text-[#00ff9d] text-sm font-medium">
+                                            <span key={t} className="px-4 py-2 rounded-lg bg-[#00ff9d]/10 border border-[#00ff9d]/20 text-[#00ff9d] text-sm font-semibold tracking-wide">
                                                 {t}
                                             </span>
                                         ))}
                                     </div>
 
                                     {/* MODAL CONTENT: Showing Descriptions (Bullets) HERE */}
-                                    <div className="space-y-6 text-gray-300 leading-relaxed">
-                                        <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
-                                            <h4 className="text-lg font-bold text-white mb-3">Key Highlights</h4>
+                                    <div className="space-y-8 text-gray-300 leading-relaxed">
+                                        <div className="bg-white/5 !pb-3 !pt-3 rounded-3xl border border-white/10 !mt-12 lg:mx-8">
+                                            <h4 className="text-xl md:text-2xl font-bold text-white mb-6 !pb-3 !pl-8 md:!pl-6">Key Highlights</h4>
                                             {/* BULLET POINTS */}
-                                            <ul className="list-disc pl-5 space-y-2 mb-4">
+                                            <ul className="!pl-8 md:!pl-14 space-y-6 mb-6 !pb-6 text-base md:text-lg text-white/90">
                                                 {Array.isArray(selectedProject.description) ?
-                                                    selectedProject.description.map((pt, i) => <li key={i}>{pt}</li>)
-                                                    : <li>{selectedProject.description}</li>
+                                                    selectedProject.description.map((pt, i) => (
+                                                        <li key={i} className="flex items-start gap-4 leading-relaxed">
+                                                            <div className="flex-shrink-0 flex items-center h-7 pt-1">
+                                                                <div className="w-2.5 h-2.5 rounded-full bg-[#00ff9d] shadow-[0_0_10px_#00ff9d]"></div>
+                                                            </div>
+                                                            <span className="flex-1">{pt}</span>
+                                                        </li>
+                                                    ))
+                                                    : (
+                                                        <li className="flex items-start gap-4 leading-relaxed">
+                                                            <div className="flex-shrink-0 flex items-center h-7 pt-1">
+                                                                <div className="w-2.5 h-2.5 rounded-full bg-[#00ff9d] shadow-[0_0_10px_#00ff9d]"></div>
+                                                            </div>
+                                                            <span className="flex-1">{selectedProject.description}</span>
+                                                        </li>
+                                                    )
                                                 }
                                             </ul>
 
-                                            <div className="text-sm text-gray-400 border-t border-white/10 pt-4 mt-4">
+                                            <div className="text-base text-gray-400 border-t border-white/10 pt-6 mt-6 pb-4 leading-loose !px-8 md:!px-14">
                                                 <p>{selectedProject.details}</p>
                                             </div>
                                         </div>
@@ -226,6 +279,36 @@ const Projects = () => {
                             </div>
                         </motion.div>
                     </div>
+                )}
+            </AnimatePresence>
+
+            {/* Enlarged Image Modal */}
+            <AnimatePresence>
+                {enlargedImage && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setEnlargedImage(null)}
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-8 cursor-zoom-out"
+                    >
+                        <button
+                            onClick={(e) => { e.stopPropagation(); setEnlargedImage(null); }}
+                            className="absolute top-6 right-6 z-[110] p-3 bg-white/10 hover:bg-red-500/80 rounded-full text-white transition-colors backdrop-blur-md border border-white/20 shadow-2xl"
+                        >
+                            <X size={28} />
+                        </button>
+                        <motion.img
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            src={enlargedImage}
+                            alt="Enlarged view"
+                            className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl border border-white/10 cursor-default"
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                    </motion.div>
                 )}
             </AnimatePresence>
         </section>
