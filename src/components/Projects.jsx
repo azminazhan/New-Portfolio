@@ -35,7 +35,9 @@ const Projects = () => {
                 `${import.meta.env.BASE_URL}iso.png`,
                 `${import.meta.env.BASE_URL}admin.png`
             ],
-            liveDemo: "https://entomo-7c549.web.app/"
+            liveDemo: "https://entomo-7c549.web.app/",
+            github: "#",
+            credentials: { email: "sadmin@entomo.co", pass: "12345678" }
         },
         {
             id: 2,
@@ -50,6 +52,7 @@ const Projects = () => {
             details: "Using a hybrid model ResNet-50 with LSTM, the system detects deepfake videos by detecting generated artifacts on the face.",
             tech: ['Python', 'Streamlit', 'TensorFlow', 'PyTorch', 'Machine Learning'],
             liveDemo: 'https://deepfake-detection-system-hv7yzpci4fubzj9vvktvlu.streamlit.app/',
+            github: "#",
             color: 'from-blue-500 to-cyan-500',
             images: [
                 `${import.meta.env.BASE_URL}deep_home.png`,
@@ -219,18 +222,31 @@ const Projects = () => {
                                             <span className="text-[#00ff9d] font-mono text-sm mb-4 block tracking-wider uppercase font-semibold">{selectedProject.category}</span>
                                             <motion.h3 layoutId={`title-${selectedProject.id}`} className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">{selectedProject.title}</motion.h3>
                                         </div>
-                                        <div className="flex gap-4 mt-2 md:mt-0">
-                                            <a href="#" className="flex items-center !gap-2 !px-4 !py-2 rounded-full bg-white/10 hover:bg-[#00ff9d]/20 text-white hover:text-[#00ff9d] transition-colors font-semibold text-base leading-none">
-                                                <Github size={20} /> Source
-                                            </a>
-                                            {selectedProject.liveDemo ? (
-                                                <a href={selectedProject.liveDemo} target="_blank" rel="noopener noreferrer" className="flex items-center !gap-2 !px-4 !py-3 rounded-full bg-[#00ff9d] !text-black hover:bg-[#00ff9d]/80 transition-colors font-bold text-base leading-none">
-                                                    <ExternalLink size={20} /> Live Demo
-                                                </a>
-                                            ) : (
-                                                <a href="#" className="flex items-center !gap-2 !px-4 !py-3 rounded-full bg-[#00ff9d] !text-black hover:bg-[#00ff9d]/80 transition-colors font-bold text-base leading-none">
-                                                    <ExternalLink size={20} /> Live Demo
-                                                </a>
+                                        <div className="flex flex-col items-center sm:items-end mt-2 md:mt-0">
+                                            <div className="flex gap-4">
+                                                {selectedProject.github && (
+                                                    <a href={selectedProject.github} target="_blank" rel="noopener noreferrer" className="flex items-center !gap-2 !px-4 !py-2 rounded-full bg-white/10 hover:bg-[#00ff9d]/20 text-white hover:text-[#00ff9d] transition-colors font-semibold text-base leading-none">
+                                                        <Github size={20} /> Source
+                                                    </a>
+                                                )}
+                                                {selectedProject.liveDemo && (
+                                                    <a href={selectedProject.liveDemo} target="_blank" rel="noopener noreferrer" className="flex items-center !gap-2 !px-4 !py-3 rounded-full bg-[#00ff9d] !text-black hover:bg-[#00ff9d]/80 transition-colors font-bold text-base leading-none">
+                                                        <ExternalLink size={20} /> Live Demo
+                                                    </a>
+                                                )}
+                                            </div>
+                                            {selectedProject.credentials && (
+                                                <div className="!mt-6 p-4 bg-white/5 rounded-xl border border-[#00ff9d]/20 text-sm text-gray-300 w-full sm:w-auto self-end md:self-end shadow-md">
+                                                    <p className="font-bold text-white mb-3 text-xs uppercase tracking-wider flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#00ff9d]"></span> Demo Credentials</p>
+                                                    <div className="flex items-center justify-between gap-8 mb-2">
+                                                        <span className="text-gray-400">Email:</span>
+                                                        <span className="text-[#00ff9d] font-mono select-all">{selectedProject.credentials.email}</span>
+                                                    </div>
+                                                    <div className="flex items-center justify-between gap-8">
+                                                        <span className="text-gray-400">Password:</span>
+                                                        <span className="text-[#00ff9d] font-mono select-all">{selectedProject.credentials.pass}</span>
+                                                    </div>
+                                                </div>
                                             )}
                                         </div>
                                     </div>
